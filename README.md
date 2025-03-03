@@ -60,7 +60,7 @@ Me encontre no **LinkedIn:**<br>
 3. **Configure as variáveis de ambiente:**
      Crie um arquivo `.env` e adicione a seguinte variável:
       ```env
-      MONGO_URI_CONNECTION=sua-conexão-com-seu-banco-de-dados
+      MONGO_URI_CONNECTION=string-de-conexão-com-seu-banco-de-dados
       ```
 4. **Execute o servidor:**
       ```bash
