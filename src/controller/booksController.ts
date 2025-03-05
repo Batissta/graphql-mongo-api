@@ -1,4 +1,5 @@
 import Books from "../model/books";
+import { GraphQLError } from "graphql";
 import { randomUUID } from "node:crypto";
 
 export const findAllBooks = async () => {
@@ -6,7 +7,21 @@ export const findAllBooks = async () => {
 };
 
 export const findOneBook = async (name: String) => {
-  return await Books.findOne({ name });
+  const book = await Books.findOne({ name });
+  console.log(book);
+
+  if (!book) {
+    throw new GraphQLError(`There is not any book called ${name}, sorry!`, {
+      extensions: {
+        code: "BOOK_NOT_FOUND",
+        http: {
+          status: 404,
+        },
+      },
+    });
+  }
+
+  return book;
 };
 
 export const createBook = async (

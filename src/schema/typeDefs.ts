@@ -24,7 +24,7 @@ export const typeDefs = gql`
     findOnePerson(email: String!): Person
 
     findAllBooks: [Book]!
-    findOneBook(name: String!): Book
+    findOneBook(name: String!): Book!
   }
 
   type Mutation {

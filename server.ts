@@ -1,18 +1,33 @@
 import { ApolloServer } from "apollo-server";
 import { typeDefs } from "./src/schema/typeDefs";
 import { resolvers } from "./src/resolvers/resolvers";
-import dotenv from "dotenv";
+import jwt from "jsonwebtoken";
+import env from "./src/config/config";
 import mongoose from "mongoose";
-
-dotenv.config();
+import persons from "./src/model/persons";
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  context: async ({ req }) => {
+    const authHeader = req.headers.authorization || "";
+    console.log(authHeader);
+
+    const token = authHeader.replace("Bearer ", "");
+    if (!token) return { auth: false, req };
+    try {
+      const decoded = jwt.verify(token, env.SECRET);
+      console.log(decoded);
+
+      return { user: await persons.findOne({ id: decoded }), auth: true, req };
+    } catch (error) {
+      return { auth: false, req };
+    }
+  },
 });
 
 mongoose
-  .connect(process.env.MONGO_URI_CONNECTION || "")
+  .connect(env.MONGO_URI_CONNECTION)
   .then(() => {
     server.listen().then(({ url }) => {
       console.log(`🚀 HTTP Server running ${url}`);

@@ -22,30 +22,50 @@ export const resolvers = {
 
     findAllPersons: async () => await findPersons(),
 
-    findOnePerson: async (_: unknown, { email }: { email: string }) =>
-      await findOne(email),
+    findOnePerson: async (_: any, { email }: { email: string }) => {
+      return await findOne(email);
+    },
 
     findAllBooks: async () => await findAllBooks(),
 
-    findOneBook: async (_: unknown, { name }: { name: string }) =>
-      await findOneBook(name),
+    findOneBook: async (_: any, { name }: { name: string }) => {
+      return await findOneBook(name);
+    },
   },
   Mutation: {
-    createPerson: async (_: unknown, { name, email, password }: Person) =>
+    createPerson: async (_: any, { name, email, password }: Person) =>
       await createPerson(name, email, password),
 
-    updatePerson: async (_: unknown, { id, name, email, password }: Person) =>
-      await updatePerson(id!, name, email, password),
+    updatePerson: async (
+      _: any,
+      { id, name, email, password }: Person,
+      { auth }
+    ) => {
+      if (!auth) throw new Error("Usuário não autorizado!");
+
+      return await updatePerson(id!, name, email, password);
+    },
 
     newRead: async (
-      _: unknown,
-      { userId, bookId }: { userId: string; bookId: string }
-    ) => await newRead(userId, bookId),
+      _: any,
+      { userId, bookId }: { userId: string; bookId: string },
+      { auth }
+    ) => {
+      if (!auth) throw new Error("Usuário não autorizado!");
+      return await newRead(userId, bookId);
+    },
 
-    createBook: async (_: unknown, { name, author, gender, pages }: Book) =>
+    createBook: async (_: any, { name, author, gender, pages }: Book) =>
       await createBook(name, author, gender, pages),
 
-    updateBook: async (_: unknown, { id, name, author, gender, pages }: Book) =>
-      await updateBook(id!, name, author, gender, pages),
+    updateBook: async (
+      _: any,
+      { id, name, author, gender, pages }: Book,
+      { auth }
+    ) => {
+      if (!auth) throw new Error("Usuário não autorizado!");
+
+      return await updateBook(id!, name, author, gender, pages);
+    },
   },
 };

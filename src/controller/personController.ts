@@ -1,19 +1,21 @@
 import Persons from "../model/persons";
 import Books from "../model/books";
+import jwt from "jsonwebtoken";
 import { randomUUID } from "node:crypto";
+// import env from "../config/config";
 
 export const findPersons = async () => {
   return await Persons.find();
 };
 
-export const findOne = async (email: String) => {
+export const findOne = async (email: string) => {
   return await Persons.findOne({ email });
 };
 
 export const createPerson = async (
-  name: String,
-  email: String,
-  password: String
+  name: string,
+  email: string,
+  password: string
 ) => {
   return await Persons.create({
     id: `p${randomUUID()}`,
@@ -24,10 +26,10 @@ export const createPerson = async (
 };
 
 export const updatePerson = async (
-  id: String,
-  name?: String,
-  email?: String,
-  password?: String
+  id: string,
+  name?: string,
+  email?: string,
+  password?: string
 ) => {
   const updatedData: { [key: string]: any } = {};
 
